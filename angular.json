@@ -98,6 +98,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "mi-musica:build:production",
+            "firebaseProject": "mi-musica-73129",
+            "firebaseHostingSite": "mi-musica"
+          }
         }
       }
     }

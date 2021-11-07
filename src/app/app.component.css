@@ -12,6 +12,10 @@ body{
   box-shadow: 10px 10px 130px 29px rgba(0,0,0,0.39);
 }
 
+.archivomp3{
+  display: flex;
+}
+
 /* Music */
 
 .sign {
@@ -205,6 +209,11 @@ body{
 
 /* MODAL */
 
+/* Video-youtube */
+
+.youtube{
+  margin: 1.5rem;
+}
 
 /* Subir Music como archivo */
 
@@ -260,4 +269,14 @@ body{
 
 .subir-label i{
   margin: 20px;
+}
+
+/* Reproductor */
+
+.title{
+  color: white;
+  font-weight: 600;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 20px;
 }

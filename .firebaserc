@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "mi-musica-73129": {
+      "hosting": {
+        "mi-musica": [
+          "mi-musica"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "mi-musica-73129"
+  }
+}
