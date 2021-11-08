@@ -55,6 +55,7 @@ export class MusicaService {
     return this.afs.collection(`youtube`).add(CANCION)
     .then(() => {
       this.toastrSvc.success(`Subiste la canción ${CANCION.title}`);
+      console.log('Canción subida con exito');
     }, error => {
        console.log(error);
        this.toastrSvc.error(`Ocurrió un error :/`);
@@ -65,8 +66,10 @@ export class MusicaService {
     return this.afs.collection(`files`).add(CANCION)
     .then(() => {
       this.toastrSvc.success(`Subiste la canción ${CANCION.title}`);
+      console.log('Canción subida con exito');
     }, error => {
-       this.toastrSvc.error(`Ocurrió un error :/`);
+      this.toastrSvc.error(`Ocurrió un error :/`);
+       console.log(error);
     })
   }
 
@@ -87,4 +90,5 @@ export class MusicaService {
   borrarMusicaFile(id: string): Promise<any>{
     return this.afs.collection('files').doc(id).delete();
   }
+
 }

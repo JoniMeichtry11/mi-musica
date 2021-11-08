@@ -5,7 +5,7 @@ import { MusicaService } from './services/musica.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css', './app.component.scss'],
+  styleUrls: ['./app.component.css', './app.component.scss']
 })
 export class AppComponent implements OnInit {
   @ViewChild('audio', { static: false }) audioMusic: any;
@@ -55,6 +55,7 @@ export class AppComponent implements OnInit {
   }
 
   cargarMusicaYoutube(){
+    // OBTENER MUSICA DE YOUTUBE
     this.musicaService.obtenerMusica().subscribe((data: any) => {
       this.listMusicYoutube = [];
       data.forEach((element: any) => {
@@ -62,11 +63,13 @@ export class AppComponent implements OnInit {
           id: element.payload.doc.id,
           ...element.payload.doc.data(),
         });
+        console.log("musica YOUTUBE", this.listMusicYoutube);
       });
     });
   }
 
   cargarMusicaMP3(){
+    // OBTENER MUSICA MP3
     this.musicaService.obtenerMusicaMP3().subscribe((data: any) => {
       this.listMusicMP3 = [];
       data.forEach((element: any) => {
@@ -75,9 +78,12 @@ export class AppComponent implements OnInit {
           ...element.payload.doc.data(),
         });
       });
+      console.log("MUSICA MP3", this.listMusicMP3);
       this.listMusic = this.listMusicMP3.concat(this.listMusicYoutube);
       this.listMusic = this.listMusic.sort(function() {return Math.random() - 0.5});
+      console.log("Musica completa", this.listMusic);
     });
+
   }
 
   cambiarPreview(value: string) {
@@ -122,6 +128,12 @@ export class AppComponent implements OnInit {
           .then(() => {
             this.cargarMusicaYoutube();
             this.cargarMusicaMP3();
+            console.log(
+              'Puedes subir tu cancion :D, esta es: ',
+              title.value,
+              'viene de youtube, este es el ID: ',
+              this.urlID
+            );
           })
           .catch((err) => {
             console.log('Ocurrio algo, lo siento :/', err);
@@ -132,6 +144,12 @@ export class AppComponent implements OnInit {
           .then(() => {
             this.cargarMusicaYoutube();
             this.cargarMusicaMP3();
+            console.log(
+              'Puedes subir tu cancion :D, esta es: ',
+              title.value,
+              'viene de un archivo, este es el archivo: ',
+              file.value
+            );
           })
           .catch((err) => {
             console.log('Ocurrio algo, lo siento :/', err);

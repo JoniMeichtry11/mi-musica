@@ -273,13 +273,10 @@ body{
 
 /* Reproductor */
 
-
 .title{
   color: white;
-  font-weight: 500;
+  font-weight: 600;
   flex-direction: column;
   justify-content: center;
-  margin-top: 1rem;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin-left: 20px;
 }
