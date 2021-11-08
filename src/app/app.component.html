@@ -1,4 +1,14 @@
 <div class="container" style="height: 100vh">
+
+  <div class="page-bg"></div>
+
+  <div class="animation-wrapper" style="z-index: -1;">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+  </div>
+
   <div
     class="row justify-content-around align-items-center mb-5 pt-4 pr-5 pl-5"
   >
@@ -134,7 +144,7 @@
           <!-- Modal footer -->
           <div class="modal-footer bg-dark justify-content-center">
             <button
-              type="button"
+              type="submit"
               class="btn btn-warning"
               (click)="subirMusica()"
               #enviar
@@ -155,35 +165,63 @@
   <!-- MUSICA -->
 
   <!-- Si es por Youtube -->
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <div
+      class="
+        d-inline-flex
+        card
+        text-white
+        bg-dark
+        mb-5
+        pl-4
+        pr-4
+        justify-content-center
+        align-items-center
+      "
+      *ngFor="let music of listMusic"
+    >
+      <!-- Canción que viene de Youtube -->
+      <div class="d-flex mt-3" *ngIf="music.urlVideo" style="max-width: 25em;">
+        <div class="d-flex justify-content-center flex-grow-1 text-center title">
+          <h2>{{ music.title }}</h2>
+        </div>
+        <div class="d-flex justify-content-end ml-3 mr-3 mb-1 align-self-center">
+          <button class="btn btn-danger" (click)="deleteMusicYoutube(music.id)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
 
-  <div class="d-flex" *ngFor="let music of listMusic">
-    <!-- Canción que viene de Youtube -->
+      <youtube-player
+        *ngIf="music.urlVideo"
+        [videoId]="music.urlVideo"
+        [width]="400"
+        [height]="200"
+        style="margin-top: .5rem; margin-bottom: 1.5rem"
+      ></youtube-player>
 
-    <youtube-player
-      *ngIf="music.urlVideo"
-      [videoId]="music.urlVideo"
-      [width]="400"
-      [height]="100"
-      style="margin-top: 1.5rem; margin-bottom: 1.5rem;"
-    ></youtube-player>
-    <div *ngIf="music.urlVideo" class="d-flex title">
-      <h4>{{ music.title }}</h4>
-    </div>
+      <!-- Si es por archivo -->
 
-    <!-- Si es por archivo -->
+      <div class="d-flex mt-3" *ngIf="music.fileName">
+        <div class="d-flex justify-content-center flex-grow-1 text-center title">
+          <h2>{{ music.title }}</h2>
+        </div>
+        <div class="d-flex justify-content-end ml-3 mr-3 mb-1 align-self-center">
+          <button class="btn btn-danger" (click)="deleteMusicFile(music.id)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
 
-    <div class="d-flex mt-5" *ngIf="music.fileName">
       <div>
         <audio
+          *ngIf="music.fileName"
           class="player__audio mb-4 reproductorMusica"
           controls
-          style="width: 400px"
+          style="width: 400px; height: 60px"
         >
           <source [src]="music.fileName" type="audio/mpeg" />
         </audio>
-      </div>
-      <div *ngIf="music.fileName" class="d-flex title">
-        <h4>{{ music.title }}</h4>
       </div>
     </div>
   </div>

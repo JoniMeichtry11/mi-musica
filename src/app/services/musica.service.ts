@@ -4,6 +4,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Formulario } from '../model/formulario';
 import { Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class MusicaService {
 
   url = "";
 
-  constructor(private storage: AngularFireStorage, private afs: AngularFirestore){}
+  constructor(private storage: AngularFireStorage, private afs: AngularFirestore, private toastrSvc:ToastrService){}
 
   // SI SUBO UN LINK DE YOUTUBE
 
@@ -53,29 +54,37 @@ export class MusicaService {
   guardarCancion(CANCION: Formulario): Promise<any>{
     return this.afs.collection(`youtube`).add(CANCION)
     .then(() => {
-      console.log('Canción subida con exito');
+      this.toastrSvc.success(`Subiste la canción ${CANCION.title}`);
     }, error => {
        console.log(error);
+       this.toastrSvc.error(`Ocurrió un error :/`);
     })
   }
 
   guardarCancionMP3(CANCION: Formulario): Promise<any>{
     return this.afs.collection(`files`).add(CANCION)
     .then(() => {
-      console.log('Canción subida con exito');
+      this.toastrSvc.success(`Subiste la canción ${CANCION.title}`);
     }, error => {
-       console.log(error);
+       this.toastrSvc.error(`Ocurrió un error :/`);
     })
   }
 
-  obtenerMusica(): any{
+  obtenerMusica(): Observable<any>{
     const youtube = this.afs.collection(`youtube`, ref => ref.orderBy('fechaCreacion', 'desc')).snapshotChanges();
     return youtube;
   }
 
-  obtenerMusicaMP3(): any{
+  obtenerMusicaMP3(): Observable<any>{
     const musicaMP3 = this.afs.collection(`files`, ref => ref.orderBy('fechaCreacion', 'desc')).snapshotChanges();
     return musicaMP3;
   }
 
+  borrarMusicaYoutube(id: string): Promise<any>{
+    return this.afs.collection('youtube').doc(id).delete();
+  }
+
+  borrarMusicaFile(id: string): Promise<any>{
+    return this.afs.collection('files').doc(id).delete();
+  }
 }

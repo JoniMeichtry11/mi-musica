@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { MusicaService } from './services/musica.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.css', './app.component.scss'],
 })
 export class AppComponent implements OnInit {
   @ViewChild('audio', { static: false }) audioMusic: any;
@@ -39,7 +40,7 @@ export class AppComponent implements OnInit {
 
   public listMusic: any[] = [];
 
-  constructor(private musicaService: MusicaService) {}
+  constructor(private musicaService: MusicaService, private toastrSvc:ToastrService) {}
 
   ngOnInit() {
     // CARGA DE IFRAME DE YOUTUBE DE FORMA ASINCRONA
@@ -49,7 +50,11 @@ export class AppComponent implements OnInit {
       document.body.appendChild(tag);
       this.apiLoaded = true;
     }
-    // OBTENER MUSICA DE YOUTUBE
+    this.cargarMusicaYoutube();
+    this.cargarMusicaMP3();
+  }
+
+  cargarMusicaYoutube(){
     this.musicaService.obtenerMusica().subscribe((data: any) => {
       this.listMusicYoutube = [];
       data.forEach((element: any) => {
@@ -57,10 +62,11 @@ export class AppComponent implements OnInit {
           id: element.payload.doc.id,
           ...element.payload.doc.data(),
         });
-        console.log("musica YOUTUBE", this.listMusicYoutube);
       });
     });
-    // OBTENER MUSICA MP3
+  }
+
+  cargarMusicaMP3(){
     this.musicaService.obtenerMusicaMP3().subscribe((data: any) => {
       this.listMusicMP3 = [];
       data.forEach((element: any) => {
@@ -69,12 +75,9 @@ export class AppComponent implements OnInit {
           ...element.payload.doc.data(),
         });
       });
-      console.log("MUSICA MP3", this.listMusicMP3);
       this.listMusic = this.listMusicMP3.concat(this.listMusicYoutube);
       this.listMusic = this.listMusic.sort(function() {return Math.random() - 0.5});
-      console.log("Musica completa", this.listMusic);
     });
-
   }
 
   cambiarPreview(value: string) {
@@ -112,16 +115,13 @@ export class AppComponent implements OnInit {
       (this.urlID.length === 11 && title.value.length > 0)
     ) {
       enviar.setAttribute('data-dismiss', 'modal');
+      this.toastrSvc.info('Subiendo canción . . .');
       if (this.urlID.length === 11) {
         this.musicaService
           .setMusic(this.urlID, title.value)
           .then(() => {
-            console.log(
-              'Puedes subir tu cancion :D, esta es: ',
-              title.value,
-              'viene de youtube, este es el ID: ',
-              this.urlID
-            );
+            this.cargarMusicaYoutube();
+            this.cargarMusicaMP3();
           })
           .catch((err) => {
             console.log('Ocurrio algo, lo siento :/', err);
@@ -130,12 +130,8 @@ export class AppComponent implements OnInit {
         this.musicaService
           .setMusicMP3(this.file, title.value)
           .then(() => {
-            console.log(
-              'Puedes subir tu cancion :D, esta es: ',
-              title.value,
-              'viene de un archivo, este es el archivo: ',
-              file.value
-            );
+            this.cargarMusicaYoutube();
+            this.cargarMusicaMP3();
           })
           .catch((err) => {
             console.log('Ocurrio algo, lo siento :/', err);
@@ -144,5 +140,31 @@ export class AppComponent implements OnInit {
     } else {
       console.log('Falta que subas la canción :/');
     }
+  }
+
+  deleteMusicYoutube(id: string){
+    this.toastrSvc.info('Eliminando canción . . .');
+    this.musicaService.borrarMusicaYoutube(id)
+      .then(() => {
+        this.toastrSvc.success(`Eliminaste la canción`);
+        this.cargarMusicaYoutube();
+        this.cargarMusicaMP3();
+      }).catch(() => {
+        this.toastrSvc.error(`Ocurrió un error :/`);
+        console.log("Ocurrió un problema al eliminar tu canción");
+      });
+  }
+
+  deleteMusicFile(id: string){
+    this.toastrSvc.info('Eliminando canción . . .');
+    this.musicaService.borrarMusicaFile(id)
+      .then(() => {
+        this.toastrSvc.success(`Eliminaste la canción`);
+        this.cargarMusicaYoutube();
+        this.cargarMusicaMP3();
+      }).catch(() => {
+        this.toastrSvc.error(`Ocurrió un error :/`);
+        console.log("Ocurrió un problema al eliminar tu canción");
+      });
   }
 }

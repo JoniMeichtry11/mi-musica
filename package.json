@@ -21,6 +21,7 @@
     "@angular/router": "~12.2.0",
     "@angular/youtube-player": "^13.0.0",
     "firebase": "^9.3.0",
+    "ngx-toastr": "^14.1.4",
     "rxfire": "^6.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
